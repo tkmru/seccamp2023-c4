@@ -1,0 +1,68 @@
+services:
+  bind:
+    build:
+      context: .
+      dockerfile: ./bind/Dockerfile
+    container_name: seccamp-bind
+    tty: true
+    cap_add:
+      - ALL
+    networks:
+      net-10.8.9.0:
+        ipv4_address: 10.8.9.2
+    mac_address: 02:42:0a:08:09:02
+    ports:
+      - "127.0.0.1:53:53"
+      - "127.0.0.1:53:53/udp"
+
+  postgres:
+    build: 
+      context: .
+      dockerfile: ./postgres/Dockerfile
+    container_name: seccamp-postgres
+    tty: true
+    cap_add:
+      - ALL
+    networks:
+      net-10.8.9.0:
+        ipv4_address: 10.8.9.3
+    mac_address: 02:42:0a:08:09:03
+    ports:
+      - "127.0.0.1:5432:5432"
+
+  ssh:
+    build: 
+      context: .
+      dockerfile: ./ssh/Dockerfile
+    container_name: seccamp-ssh
+    tty: true
+    cap_add:
+      - ALL
+    networks:
+      net-10.8.9.0:
+        ipv4_address: 10.8.9.4
+    mac_address: 02:42:0a:08:09:04
+    ports:
+      - "127.0.0.1:22:22"
+  
+  pentester:
+    build:
+      context: .
+      dockerfile: ./pentester/Dockerfile
+    container_name: seccamp-pentester
+    tty: true
+    cap_add:
+      - ALL
+    networks:
+      net-10.8.9.0:
+        ipv4_address: 10.8.9.5
+    mac_address: 02:42:0a:08:09:05
+    privileged: true
+
+networks:
+  net-10.8.9.0:
+    name: net-10.8.9.0
+    ipam:
+      config:
+        - subnet: 10.8.9.0/24
+          gateway: 10.8.9.1
